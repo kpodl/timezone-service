@@ -1,0 +1,40 @@
+[project]
+name = "timezone-service"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src"
+]
+testpaths = [
+    "tests"
+]
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "RUF",   # ruff-specific
+    "ERA",   # eradicate: commented-out code
+    "FAST",  # fastapi
+    "I",     # isort
+    "ANN",   # annotations
+    "BLE",   # blind except
+    "FA",    # future annotations
+    "PT",    # pytest style
+    "SIM",   # simplify
+    "TID",   # tidy imports
+    "TD",    # todos
+    "PTH",   # pathlib
+    "C90",   # mccabe
+    "NPY",   # numpy
+    "PD",    # pandas
+    "PERF",  # perflint
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F"      # pyflakes
+]
+ignore = []
+future-annotations = true
