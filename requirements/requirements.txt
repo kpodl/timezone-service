@@ -21,14 +21,10 @@ click==8.3.0
     #   rich-toolkit
     #   typer
     #   uvicorn
-colorama==0.4.6
-    # via pytest-watch
 decorator==5.2.1
     # via ipython
 dnspython==2.8.0
     # via email-validator
-docopt==0.6.2
-    # via pytest-watch
 email-validator==2.3.0
     # via
     #   fastapi
@@ -53,6 +49,7 @@ httptools==0.6.4
     # via uvicorn
 httpx==0.28.1
     # via
+    #   -r requirements/requirements.in
     #   fastapi
     #   fastapi-cloud-cli
 idna==3.10
@@ -126,10 +123,8 @@ pyogrio==0.11.1
 pyproj==3.7.2
     # via geopandas
 pytest==8.4.2
-    # via
-    #   -r requirements/requirements.in
-    #   pytest-watch
-pytest-watch==4.2.0
+    # via -r requirements/requirements.in
+pytest-watcher==0.4.3
     # via -r requirements/requirements.in
 python-dateutil==2.9.0.post0
     # via pandas
@@ -198,7 +193,7 @@ uvicorn==0.37.0
 uvloop==0.21.0
     # via uvicorn
 watchdog==6.0.0
-    # via pytest-watch
+    # via pytest-watcher
 watchfiles==1.1.0
     # via uvicorn
 wcwidth==0.2.14

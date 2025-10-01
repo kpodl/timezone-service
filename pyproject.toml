@@ -8,6 +8,9 @@ pythonpath = [
 testpaths = [
     "tests"
 ]
+addopts = [
+    "--import-mode=importlib",
+]
 
 [tool.ruff]
 line-length = 120
@@ -38,3 +41,8 @@ select = [
 ]
 ignore = []
 future-annotations = true
+
+[tool.pytest-watcher]
+now = true
+clear = true
+delay = 0.5

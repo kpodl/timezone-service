@@ -2,8 +2,9 @@ fastapi[standard]
 geopandas
 
 # Development
-ruff
+httpx
+ipython
 mypy
 pytest
-pytest-watch
-ipython
+pytest-watcher
+ruff
