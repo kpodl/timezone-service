@@ -1,1 +1,9 @@
 fastapi[standard]
+geopandas
+
+# Development
+ruff
+mypy
+pytest
+pytest-watch
+ipython
