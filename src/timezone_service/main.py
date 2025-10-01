@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+TIMEZONES_ENDPOINT = "/timezones"
+
 app = FastAPI()
 
 
