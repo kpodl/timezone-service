@@ -3,7 +3,7 @@
 ## Implementation
 
 - [ ] `/timezones` endpoint
-  - [ ] return all timezones
+  - [x] return all timezones
   - [ ] cache extracted timezones
   - [ ] Remove 'uninhabited'
 - [ ] `/timezones?lat=y&lon=x`
