@@ -4,7 +4,7 @@ from timezone_service import app
 from timezone_service.main import TIMEZONES_ENDPOINT
 
 
-def test_timezones_endpoint_returns_timezones_without_parameter():
+def test_timezones_endpoint_without_parameter_returns_all_timezones():
     client = TestClient(app)
 
     response = client.get(TIMEZONES_ENDPOINT)
