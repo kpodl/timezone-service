@@ -42,6 +42,13 @@ select = [
 ignore = []
 future-annotations = true
 
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.lint.extend-per-file-ignores]
+# Ignore "ANN201" (missing return type for public function) in test files
+"tests/**/*.py" = ["ANN201"]
+
 [tool.pytest-watcher]
 now = true
 clear = true
