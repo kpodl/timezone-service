@@ -7,8 +7,10 @@ from timezone_service.main import TIMEZONES_ENDPOINT
 def test_timezones_endpoint_without_parameter_returns_all_timezones():
     client = TestClient(app)
 
+    # When all timezones are requested,
     response = client.get(TIMEZONES_ENDPOINT)
 
+    # Then a list of timezone strings will be returned.
     assert response.is_success
     timezones: list[str] = response.json()
     assert isinstance(timezones, list)
