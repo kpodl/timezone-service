@@ -10,6 +10,7 @@ testpaths = [
 ]
 addopts = [
     "--import-mode=importlib",
+    "--showlocals"
 ]
 
 [tool.ruff]
