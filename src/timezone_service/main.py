@@ -1,7 +1,9 @@
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Annotated, Self
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
+from pydantic import BaseModel, Field, model_validator
 
 from .timezone_db import TimezoneDatabase
 
@@ -14,6 +16,18 @@ app = FastAPI()
 timezone_db: TimezoneDatabase = TimezoneDatabase.from_file(TIMEZONE_DATA_ZIP_URI)
 
 
+class CoordinateParams(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    lat: float | None = Field(None, ge=-90, le=90)
+    lon: float | None = Field(None, ge=-180, le=180)
+
+    @model_validator(mode="after")
+    def validate_all_or_no_coordinates_set(self) -> Self:
+        if (self.lat is None) is not (self.lon is None):
+            raise ValueError("Either both 'lat' and 'lon' must be set or none of them.")
+        return self
+
 @app.get(TIMEZONES_ENDPOINT)
-async def timezones() -> Iterable[str]:
+async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> Iterable[str] | str:
     return timezone_db.get_all_timezones()
