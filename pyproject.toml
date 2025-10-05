@@ -50,6 +50,12 @@ mypy-init-return = true
 # Ignore "ANN201" (missing return type for public function) in test files
 "tests/**/*.py" = ["ANN201"]
 
+[tool.ruff.lint.flake8-tidy-imports]
+banned-module-level-imports = [
+    "geopandas"  # slow to import
+]
+
+
 [tool.pytest-watcher]
 now = true
 clear = true

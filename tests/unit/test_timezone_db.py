@@ -1,9 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pytest
-from geopandas import GeoDataFrame
 from shapely import Point, Polygon
 
 from timezone_service import TimezoneDatabase
 from timezone_service.timezone_db import GMT_TIMEZONE_BY_OFFSET, GMT_TIMEZONE_PREFIX
+
+if TYPE_CHECKING:
+    from geopandas import GeoDataFrame
 
 
 class TestTimezoneDatabase:
@@ -17,6 +23,8 @@ class TestTimezoneDatabase:
 
     @pytest.fixture
     def geo_df(self) -> GeoDataFrame:
+        from geopandas import GeoDataFrame
+
         return GeoDataFrame(
             {
                 TimezoneDatabase.TIMEZONE_HEADER: [
@@ -38,6 +46,8 @@ class TestTimezoneDatabase:
         return TimezoneDatabase(geo_df)
 
     def test_get_all_timezones_returns_all_unique_timezones(self):
+        from geopandas import GeoDataFrame
+
         tz_db = TimezoneDatabase(
             GeoDataFrame(
                 {

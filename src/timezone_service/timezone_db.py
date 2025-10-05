@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 from functools import cache
 from math import trunc
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
-import geopandas
-from geopandas import GeoDataFrame
 from shapely import Point
+
+if TYPE_CHECKING:
+    from geopandas import GeoDataFrame
 
 GMT_TIMEZONE_PREFIX = "Etc/GMT"
 
@@ -25,6 +28,8 @@ class TimezoneDatabase:
 
     @classmethod
     def from_file(cls, path_or_uri: str) -> Self:
+        import geopandas
+
         timezones_df = geopandas.read_file(path_or_uri)
         return cls(timezones_df)
 
