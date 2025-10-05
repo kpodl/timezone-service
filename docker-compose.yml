@@ -2,5 +2,6 @@ services:
   timezone-service:
     build:
       context: .
+    image: timezone-service
     ports:
       - 8080:8080

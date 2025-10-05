@@ -16,8 +16,8 @@
     - [x] Oceans are not covered: Use nautical rules.
     - [ ] Docs
 - Production service
-    - [ ] copy code/data in `Dockerfile`
-    - [ ] `Dockerfile` command: run service
+    - [x] copy code/data in `Dockerfile`
+    - [x] `Dockerfile` command: run service
     - [ ] `README.md` & Service docs
     - [ ] smoketest (`curl`) for final image.
     - [ ] Healthcheck

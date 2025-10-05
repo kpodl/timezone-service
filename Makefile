@@ -11,3 +11,10 @@ lint:
 
 bash:
 	$(DC_EXEC) /bin/bash
+
+build:
+	docker compose build
+
+run-production:
+	docker run --rm -it -e PORT=8080 -p $(PORT):8080 timezone-service
+
