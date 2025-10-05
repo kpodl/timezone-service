@@ -1,3 +1,5 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 from textwrap import dedent
 from typing import Annotated, Self
@@ -13,7 +15,18 @@ TIMEZONES_ENDPOINT = "/timezones"
 TIMEZONE_DATA_PATH = Path(__file__).parent.parent.parent / "data" / "tz_world.zip"
 TIMEZONE_DATA_ZIP_URI = "zip://" + str(TIMEZONE_DATA_PATH) + "/world/"
 
+timezone_db: TimezoneDatabase
+
+
+@asynccontextmanager
+async def load_timezone_db(app: FastAPI) -> AsyncIterator[None]:
+    global timezone_db
+    timezone_db = TimezoneDatabase.from_file(TIMEZONE_DATA_ZIP_URI)
+    yield
+
+
 app = FastAPI(
+    lifespan=load_timezone_db,
     title="Timezones API",
     summary="Provides timezone information for specific coordinates.",
     version="1.0.0",
@@ -24,8 +37,6 @@ app = FastAPI(
         """
     ),
 )
-
-timezone_db: TimezoneDatabase = TimezoneDatabase.from_file(TIMEZONE_DATA_ZIP_URI)
 
 
 class CoordinateParams(BaseModel):
@@ -87,6 +98,7 @@ class CoordinateParams(BaseModel):
     responses={http_status.HTTP_200_OK: {"content": {"application/json": {"example": "Europe/Paris"}}}},
 )
 async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> list[str] | str:
+    global timezone_db
     point = coordinates_query.as_point()
     if not point:
         return timezone_db.get_all_timezones()
