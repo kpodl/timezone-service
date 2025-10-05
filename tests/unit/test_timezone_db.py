@@ -101,7 +101,12 @@ class TestTimezoneDatabase:
         ]
         # We include the left border of a timezone but not the right one.
         + [(Point(offset * 15 - 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset]) for offset in range(-11, 12)]
-        + [(Point(offset * 15 + 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset + 1]) for offset in range(-11, 12)],
+        + [(Point(offset * 15 + 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset + 1]) for offset in range(-11, 12)]
+        + [
+            # If the longitude is out of bounds all bets are off! We rely on the validation
+            # in the API.
+            pytest.param(Point(-300, 115), GMT_TIMEZONE_BY_OFFSET[8], marks=pytest.mark.xfail(strict=True))
+        ],
         ids=str,
     )
     def test_get_timezone_for_point_returns_nautical_timezone_if_none_available(
