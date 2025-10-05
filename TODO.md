@@ -20,7 +20,7 @@
     - [x] `Dockerfile` command: run service
     - [ ] `README.md` & Service docs
     - [x] smoketest (`curl`) for final image.
-    - [ ] Healthcheck
+    - [x] Healthcheck
 
 ## Other
 - [ ] Load data using fastAPI lifespan events

@@ -4,6 +4,9 @@ ARG SERVICE_UID=${SERVICE_UID:-1000}
 ARG HOME=/home/service
 ENV PORT=8080
 
+HEALTHCHECK --interval=1m --timeout=3s \
+  CMD curl -f http://localhost:${PORT}/timezones || exit 1
+
 RUN adduser --uid ${SERVICE_UID} --home ${HOME} service
 
 RUN pip install uv
