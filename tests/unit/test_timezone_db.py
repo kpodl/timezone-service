@@ -3,6 +3,7 @@ from geopandas import GeoDataFrame
 from shapely import Point, Polygon
 
 from timezone_service import TimezoneDatabase
+from timezone_service.timezone_db import GMT_TIMEZONE_PREFIX
 
 
 class TestTimezoneDatabase:
@@ -59,6 +60,13 @@ class TestTimezoneDatabase:
 
         assert len(all_timezones_list) > 0
         assert len(all_timezones_list) == len(set(all_timezones_list))
+
+    def test_get_all_timezones_returns_gmt_timezones(self, tz_db: TimezoneDatabase):
+        gmt_timezones = {f"{GMT_TIMEZONE_PREFIX}{offset:+n}" for offset in range(-12, 13)}
+
+        all_timezones = set(tz_db.get_all_timezones())
+
+        assert all_timezones & gmt_timezones == gmt_timezones
 
     @pytest.mark.parametrize(
         ("point", "resulting_tz"),

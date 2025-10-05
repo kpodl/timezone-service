@@ -7,7 +7,7 @@
     - [ ] cache extracted timezones
     - [x] Remove 'uninhabited'
     - [ ] sort timezones alphabetically
-    - [ ] Add nautical timezones returned for uninhabited coordinates
+    - [x] Add nautical timezones returned for uninhabited coordinates
     - [ ] Docs
 - [ ] `/timezones?lat=y&lon=x`
     - [x] Use `GeoDataFrame.sindex.query()` for coordinate lookup

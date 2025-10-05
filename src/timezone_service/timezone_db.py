@@ -5,6 +5,14 @@ import geopandas
 from geopandas import GeoDataFrame
 from shapely import Point
 
+GMT_TIMEZONE_PREFIX = "Etc/GMT"
+
+GMT_TIMEZONE_BY_OFFSET: dict[int, str] = {
+    # Due to conventions "Etc/GMT" timezones are reversed ("Etc/GMT+x" is UTC-x)!
+    utc_offset: f"{GMT_TIMEZONE_PREFIX}{-utc_offset:+n}"
+    for utc_offset in range(-12, 13)
+}
+
 
 class TimezoneDatabase:
     TIMEZONE_HEADER = "TZID"
@@ -35,7 +43,7 @@ class TimezoneDatabase:
         self._timezones_df = self._to_valid_timezones_df(timezones_df)
 
     def get_all_timezones(self) -> list[str]:
-        return list(set(self._timezones_df[self.TIMEZONE_HEADER]))
+        return list(set(self._timezones_df[self.TIMEZONE_HEADER])) + list(GMT_TIMEZONE_BY_OFFSET.values())
 
     def get_timezone_for_point(self, point: Point) -> str:
         # Using `predicate = "within"` ensures that the result is unique under the

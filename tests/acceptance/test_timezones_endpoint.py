@@ -13,7 +13,10 @@ class TestTimezonesEndpointWithoutParameters:
         assert response.is_success
         timezones: list[str] = response.json()
         assert isinstance(timezones, list)
-        assert len(timezones) == 417
+        assert len(timezones) == (
+            417  # timezones from shapefile w/o "uninhabited"
+            + 25  # "Etc/GMT" timezones
+        )
 
     def test_does_not_return_uninhabited_timezone(self, test_client: TestClient):
         # When all timezones are requested,
