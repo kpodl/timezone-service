@@ -32,7 +32,7 @@ class TimezoneDatabase:
         longitude = point.x
         tz_center, offset_from_center = divmod(longitude, 15.0)
         offset_from_utc = int(tz_center) + trunc(offset_from_center / 7.5)
-        return f"Etc/GMT{-offset_from_utc:+n}"
+        return GMT_TIMEZONE_BY_OFFSET[offset_from_utc]
 
     @classmethod
     def _to_valid_timezones_df(cls, timezones_df: GeoDataFrame) -> GeoDataFrame:

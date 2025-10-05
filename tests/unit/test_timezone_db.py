@@ -3,7 +3,7 @@ from geopandas import GeoDataFrame
 from shapely import Point, Polygon
 
 from timezone_service import TimezoneDatabase
-from timezone_service.timezone_db import GMT_TIMEZONE_PREFIX
+from timezone_service.timezone_db import GMT_TIMEZONE_BY_OFFSET, GMT_TIMEZONE_PREFIX
 
 
 class TestTimezoneDatabase:
@@ -87,22 +87,21 @@ class TestTimezoneDatabase:
         ("point", "resulting_tz"),
         [
             # We generate a point outside of every geometry that is in the middle of the time zone.
-            # WARNING: "Etc/GMT" timezones are reversed ("Etc/GMT+x" is UTC-x)!
-            (Point(0 + offset * 15, 0), f"Etc/GMT{-offset:+n}")
+            (Point(0 + offset * 15, 0), GMT_TIMEZONE_BY_OFFSET[offset])
             for offset in range(-11, 12)
         ]
         + [
             # 180°/-180° longitude is the date separator. This means we switch from UTC+12
             #  to UTC-12. To the east we have UTC-12, to the west UTC+12.
-            (Point(180 - 5, 0), "Etc/GMT-12"),
-            (Point(-180 + 5, 0), "Etc/GMT+12"),
+            (Point(180 - 5, 0), GMT_TIMEZONE_BY_OFFSET[12]),
+            (Point(-180 + 5, 0), GMT_TIMEZONE_BY_OFFSET[-12]),
             # At the border we just use the sign of the longitude.
-            (Point(180, 0), "Etc/GMT-12"),
-            (Point(-180, 0), "Etc/GMT+12"),
+            (Point(180, 0), GMT_TIMEZONE_BY_OFFSET[12]),
+            (Point(-180, 0), GMT_TIMEZONE_BY_OFFSET[-12]),
         ]
         # We include the left border of a timezone but not the right one.
-        + [(Point(offset * 15 - 7.5, 0), f"Etc/GMT{-offset:+n}") for offset in range(-11, 12)]
-        + [(Point(offset * 15 + 7.5, 0), f"Etc/GMT{-(offset + 1):+n}") for offset in range(-11, 12)],
+        + [(Point(offset * 15 - 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset]) for offset in range(-11, 12)]
+        + [(Point(offset * 15 + 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset + 1]) for offset in range(-11, 12)],
         ids=str,
     )
     def test_get_timezone_for_point_returns_nautical_timezone_if_none_available(
