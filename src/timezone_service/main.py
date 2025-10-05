@@ -1,9 +1,9 @@
-from collections.abc import Iterable
 from pathlib import Path
 from typing import Annotated, Self
 
 from fastapi import FastAPI, Query
 from pydantic import BaseModel, Field, model_validator
+from shapely import Point
 
 from .timezone_db import TimezoneDatabase
 
@@ -28,6 +28,19 @@ class CoordinateParams(BaseModel):
             raise ValueError("Either both 'lat' and 'lon' must be set or none of them.")
         return self
 
+    def as_point(self) -> Point | None:
+        # At this point we know that the validation has run. So either
+        # all coordinates are set or none of them is.
+        if self.lat is not None and self.lon is not None:
+            return Point(self.lon, self.lat)
+        else:
+            return None
+
+
 @app.get(TIMEZONES_ENDPOINT)
-async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> Iterable[str] | str:
-    return timezone_db.get_all_timezones()
+async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> list[str] | str | None:
+    point = coordinates_query.as_point()
+    if not point:
+        return timezone_db.get_all_timezones()
+    else:
+        return timezone_db.get_timezone_for_point(point)

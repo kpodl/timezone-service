@@ -20,8 +20,8 @@ class TimezoneDatabase:
     def __init__(self, timezones_df: GeoDataFrame):
         self._timezones_df = timezones_df
 
-    def get_all_timezones(self) -> set[str]:
-        return set(self._timezones_df[self.TIMEZONE_HEADER])
+    def get_all_timezones(self) -> list[str]:
+        return list(set(self._timezones_df[self.TIMEZONE_HEADER]))
 
     def get_timezone_for_point(self, point: Point) -> str | None:
         # Using `predicate = "within"` ensures that the result is unique under the

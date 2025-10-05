@@ -10,7 +10,7 @@
     - [ ] Add nautical timezones returned for uninhabited coordinates
     - [ ] Docs
 - [ ] `/timezones?lat=y&lon=x`
-    - [ ] Use `GeoDataFrame.sindex.query()` for coordinate lookup
+    - [x] Use `GeoDataFrame.sindex.query()` for coordinate lookup
     - [x] Verify coordinates (`pydantic` model?)
     - [ ] Return timezone for 'uninhabited' coordinates: Use nautical definition (1h/15° longitude). Use `Etc/GMT` with reversed signs!
     - [ ] Oceans are not covered: Use nautical rules.
