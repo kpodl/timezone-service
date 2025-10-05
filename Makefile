@@ -15,6 +15,9 @@ lint:
 bash:
 	$(DC_EXEC) /bin/bash
 
+run-dev:
+	$(DC_EXEC) fastapi dev --host 0.0.0.0 --port 8080 src/timezone_service
+
 PORT=8081
 
 build:
