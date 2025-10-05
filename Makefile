@@ -1,3 +1,6 @@
+.DEFAULT_GOAL = bash
+.ONESHELL:
+
 DC_EXEC = docker compose exec -w /workspaces/timezone-service timezone-service
 
 requirements: requirements/requirements.in
@@ -12,9 +15,13 @@ lint:
 bash:
 	$(DC_EXEC) /bin/bash
 
+PORT=8081
+
 build:
 	docker compose build
 
 run-production:
 	docker run --rm -it -e PORT=8080 -p $(PORT):8080 timezone-service
 
+smoketest:
+	curl -sS http://localhost:$(PORT)/timezones > /dev/null && echo "SUCCESS" || echo "FAILURE"

@@ -19,7 +19,7 @@
     - [x] copy code/data in `Dockerfile`
     - [x] `Dockerfile` command: run service
     - [ ] `README.md` & Service docs
-    - [ ] smoketest (`curl`) for final image.
+    - [x] smoketest (`curl`) for final image.
     - [ ] Healthcheck
 
 ## Other
