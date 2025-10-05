@@ -26,8 +26,13 @@ class TimezoneDatabase:
         offset_from_utc = int(tz_center) + trunc(offset_from_center / 7.5)
         return f"Etc/GMT{-offset_from_utc:+n}"
 
+    @classmethod
+    def _to_valid_timezones_df(cls, timezones_df: GeoDataFrame) -> GeoDataFrame:
+        valid_timezones_df = timezones_df.loc[timezones_df[cls.TIMEZONE_HEADER] != cls.UNINHABITED_TIMEZONE]
+        return valid_timezones_df
+
     def __init__(self, timezones_df: GeoDataFrame):
-        self._timezones_df = timezones_df
+        self._timezones_df = self._to_valid_timezones_df(timezones_df)
 
     def get_all_timezones(self) -> list[str]:
         return list(set(self._timezones_df[self.TIMEZONE_HEADER]))
@@ -37,9 +42,8 @@ class TimezoneDatabase:
         # assumption that the geometries do not overlap (disjunct except for border).
         timezone_indexes = self._timezones_df.sindex.query(point, predicate="within")
         matching_df = self._timezones_df.iloc[timezone_indexes]
-        valid_timezones_df = matching_df.loc[matching_df[self.TIMEZONE_HEADER] != self.UNINHABITED_TIMEZONE]
-        valid_timezones = valid_timezones_df[self.TIMEZONE_HEADER].to_list()
-        if valid_timezones:
-            return valid_timezones[0]
+        matching_timezones = matching_df[self.TIMEZONE_HEADER].to_list()
+        if matching_timezones:
+            return matching_timezones[0]
         else:
             return self.get_nautical_timezone_for_point(point)
