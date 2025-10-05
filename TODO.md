@@ -4,9 +4,9 @@
 
 - [ ] `/timezones` endpoint
     - [x] return all timezones
-    - [ ] cache extracted timezones
+    - [x] cache extracted timezones
     - [x] Remove 'uninhabited'
-    - [ ] sort timezones alphabetically
+    - [x] sort timezones alphabetically
     - [x] Add nautical timezones returned for uninhabited coordinates
     - [ ] Docs
 - [ ] `/timezones?lat=y&lon=x`

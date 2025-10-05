@@ -1,3 +1,4 @@
+from functools import cache
 from math import trunc
 from typing import Self
 
@@ -42,8 +43,9 @@ class TimezoneDatabase:
     def __init__(self, timezones_df: GeoDataFrame):
         self._timezones_df = self._to_valid_timezones_df(timezones_df)
 
+    @cache
     def get_all_timezones(self) -> list[str]:
-        return list(set(self._timezones_df[self.TIMEZONE_HEADER])) + list(GMT_TIMEZONE_BY_OFFSET.values())
+        return sorted(list(set(self._timezones_df[self.TIMEZONE_HEADER])) + list(GMT_TIMEZONE_BY_OFFSET.values()))
 
     def get_timezone_for_point(self, point: Point) -> str:
         # Using `predicate = "within"` ensures that the result is unique under the
