@@ -13,7 +13,7 @@
     - [x] Use `GeoDataFrame.sindex.query()` for coordinate lookup
     - [x] Verify coordinates (`pydantic` model?)
     - [ ] Return timezone for 'uninhabited' coordinates: Use nautical definition (1h/15° longitude). Use `Etc/GMT` with reversed signs!
-    - [ ] Oceans are not covered: Use nautical rules.
+    - [x] Oceans are not covered: Use nautical rules.
     - [ ] Docs
 - Production service
     - [ ] copy code/data in `Dockerfile`

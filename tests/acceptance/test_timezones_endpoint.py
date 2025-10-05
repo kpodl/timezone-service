@@ -22,3 +22,13 @@ def test_timezones_endpoint_with_lon_and_lat_returns_timezone_of_coordinate(test
     assert response.is_success
     timezone: str = response.json()
     assert timezone == "Europe/Vienna"
+
+
+def test_timezones_endpoint_for_point_in_ocean_returns_nautical_timezone(test_client: TestClient):
+    # When the timezone for a point in the Atlantic is requested,
+    response = test_client.get(TIMEZONES_ENDPOINT, params={"lat": -10, "lon": -29})
+
+    # Then the nautical timezone using the "Etc/GMT" prefix is returned.
+    assert response.is_success
+    timezone: str = response.json()
+    assert timezone == "Etc/GMT+2"

@@ -38,7 +38,7 @@ class CoordinateParams(BaseModel):
 
 
 @app.get(TIMEZONES_ENDPOINT)
-async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> list[str] | str | None:
+async def timezones(coordinates_query: Annotated[CoordinateParams, Query()]) -> list[str] | str:
     point = coordinates_query.as_point()
     if not point:
         return timezone_db.get_all_timezones()

@@ -65,11 +65,40 @@ class TestTimezoneDatabase:
         [
             (POINT_IN_TZ_1, TZ_1),
             (POINT_IN_TZ_2, TZ_2),
-            (POINT_ON_BORDER_OF_TZ_1, None),
         ],
+        ids=str,
     )
     def test_get_timezone_for_point_returns_timezone_of_geometry_containing_point(
         self, tz_db: TimezoneDatabase, point: Point, resulting_tz: str | None
+    ):
+        timezone = tz_db.get_timezone_for_point(point)
+
+        assert timezone == resulting_tz
+
+    @pytest.mark.parametrize(
+        ("point", "resulting_tz"),
+        [
+            # We generate a point outside of every geometry that is in the middle of the time zone.
+            # WARNING: "Etc/GMT" timezones are reversed ("Etc/GMT+x" is UTC-x)!
+            (Point(0 + offset * 15, 0), f"Etc/GMT{-offset:+n}")
+            for offset in range(-11, 12)
+        ]
+        + [
+            # 180°/-180° longitude is the date separator. This means we switch from UTC+12
+            #  to UTC-12. To the east we have UTC-12, to the west UTC+12.
+            (Point(180 - 5, 0), "Etc/GMT-12"),
+            (Point(-180 + 5, 0), "Etc/GMT+12"),
+            # At the border we just use the sign of the longitude.
+            (Point(180, 0), "Etc/GMT-12"),
+            (Point(-180, 0), "Etc/GMT+12"),
+        ]
+        # We include the left border of a timezone but not the right one.
+        + [(Point(offset * 15 - 7.5, 0), f"Etc/GMT{-offset:+n}") for offset in range(-11, 12)]
+        + [(Point(offset * 15 + 7.5, 0), f"Etc/GMT{-(offset + 1):+n}") for offset in range(-11, 12)],
+        ids=str,
+    )
+    def test_get_timezone_for_point_returns_nautical_timezone_if_none_available(
+        self, tz_db: TimezoneDatabase, point: Point, resulting_tz: str
     ):
         timezone = tz_db.get_timezone_for_point(point)
 
