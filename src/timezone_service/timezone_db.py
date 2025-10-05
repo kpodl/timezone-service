@@ -50,7 +50,7 @@ class TimezoneDatabase:
 
     @cache
     def get_all_timezones(self) -> list[str]:
-        return sorted(list(set(self._timezones_df[self.TIMEZONE_HEADER])) + list(GMT_TIMEZONE_BY_OFFSET.values()))
+        return sorted(list(self._timezones_df[self.TIMEZONE_HEADER].unique()) + list(GMT_TIMEZONE_BY_OFFSET.values()))
 
     def get_timezone_for_point(self, point: Point) -> str:
         # Using `predicate = "within"` ensures that the result is unique under the
