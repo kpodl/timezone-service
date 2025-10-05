@@ -10,6 +10,7 @@ class TimezoneDatabase:
     TIMEZONE_HEADER = "TZID"
     GEOMETRY_HEADER = "geometry"  # this is a standard GeoDataFrame header
     CRS = "EPSG:4326"  # coordinate reference system, mainly used in tests
+    UNINHABITED_TIMEZONE = "uninhabited"
 
     _timezones_df: GeoDataFrame
 
@@ -35,8 +36,10 @@ class TimezoneDatabase:
         # Using `predicate = "within"` ensures that the result is unique under the
         # assumption that the geometries do not overlap (disjunct except for border).
         timezone_indexes = self._timezones_df.sindex.query(point, predicate="within")
-        matching_timezones = self._timezones_df.iloc[timezone_indexes][self.TIMEZONE_HEADER].to_list()
-        if matching_timezones:
-            return matching_timezones[0]
+        matching_df = self._timezones_df.iloc[timezone_indexes]
+        valid_timezones_df = matching_df.loc[matching_df[self.TIMEZONE_HEADER] != self.UNINHABITED_TIMEZONE]
+        valid_timezones = valid_timezones_df[self.TIMEZONE_HEADER].to_list()
+        if valid_timezones:
+            return valid_timezones[0]
         else:
             return self.get_nautical_timezone_for_point(point)

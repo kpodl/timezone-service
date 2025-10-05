@@ -32,3 +32,17 @@ def test_timezones_endpoint_for_point_in_ocean_returns_nautical_timezone(test_cl
     assert response.is_success
     timezone: str = response.json()
     assert timezone == "Etc/GMT+2"
+
+
+def test_timezones_endpoint_returns_nautical_timzeones_for_uninhabited_territory(test_client: TestClient):
+    # Given the uninhabited territory of "Steventon Island"
+    # 🐧🐧🐧 (sorry penguins, you don't count),
+    steventon_island_coords = {"lat": -77.25, "lon": -148.25}
+
+    # When the timezone for the coordinates of Steventon Island is requested
+    response = test_client.get(TIMEZONES_ENDPOINT, params=steventon_island_coords)
+
+    # Then the corresponding nautical timezone will be returned.
+    assert response.is_success
+    timezone: str = response.json()
+    assert timezone == "Etc/GMT+10"
