@@ -24,4 +24,4 @@
 
 ## Other
 - [ ] Load data using fastAPI lifespan events
-- [ ] Setup stubs for mypy
+- [x] Setup stubs for mypy
