@@ -19,7 +19,7 @@ class TestTimezoneDatabase:
     ALL_TZ = (TZ_1, TZ_2, TZ_3)
     POINT_IN_TZ_1 = Point(3, 5)
     POINT_IN_TZ_2 = Point(2, -2)
-    POINT_ON_BORDER_OF_TZ_1 = Point(0, 0)
+    POINT_ON_BORDER_OF_TZ_1_AND_TZ_2 = Point(0, 0)
 
     @pytest.fixture
     def geo_df(self) -> GeoDataFrame:
@@ -87,31 +87,41 @@ class TestTimezoneDatabase:
         ids=str,
     )
     def test_get_timezone_for_point_returns_timezone_of_geometry_containing_point(
-        self, tz_db: TimezoneDatabase, point: Point, resulting_tz: str | None
+        self, tz_db: TimezoneDatabase, point: Point, resulting_tz: str
     ):
         timezone = tz_db.get_timezone_for_point(point)
 
         assert timezone == resulting_tz
 
+    def test_get_timezone_for_point_might_return_either_geometry_for_border(self, tz_db: TimezoneDatabase):
+        # Given a point on the border of two geometries
+        point = self.POINT_ON_BORDER_OF_TZ_1_AND_TZ_2
+
+        # When the timezone is requested from the `TimezoneDatabase`
+        timezone = tz_db.get_timezone_for_point(point)
+
+        # Then the timezone of both geometries might be returned.
+        assert timezone in (self.TZ_1, self.TZ_2)
+
     @pytest.mark.parametrize(
         ("point", "resulting_tz"),
         [
             # We generate a point outside of every geometry that is in the middle of the time zone.
-            (Point(0 + offset * 15, 0), GMT_TIMEZONE_BY_OFFSET[offset])
+            (Point(0 + offset * 15, 20), GMT_TIMEZONE_BY_OFFSET[offset])
             for offset in range(-11, 12)
         ]
         + [
             # 180°/-180° longitude is the date separator. This means we switch from UTC+12
             #  to UTC-12. To the east we have UTC-12, to the west UTC+12.
-            (Point(180 - 5, 0), GMT_TIMEZONE_BY_OFFSET[12]),
-            (Point(-180 + 5, 0), GMT_TIMEZONE_BY_OFFSET[-12]),
+            (Point(180 - 5, 20), GMT_TIMEZONE_BY_OFFSET[12]),
+            (Point(-180 + 5, 20), GMT_TIMEZONE_BY_OFFSET[-12]),
             # At the border we just use the sign of the longitude.
-            (Point(180, 0), GMT_TIMEZONE_BY_OFFSET[12]),
-            (Point(-180, 0), GMT_TIMEZONE_BY_OFFSET[-12]),
+            (Point(180, 20), GMT_TIMEZONE_BY_OFFSET[12]),
+            (Point(-180, 20), GMT_TIMEZONE_BY_OFFSET[-12]),
         ]
         # We include the left border of a timezone but not the right one.
-        + [(Point(offset * 15 - 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset]) for offset in range(-11, 12)]
-        + [(Point(offset * 15 + 7.5, 0), GMT_TIMEZONE_BY_OFFSET[offset + 1]) for offset in range(-11, 12)]
+        + [(Point(offset * 15 - 7.5, 20), GMT_TIMEZONE_BY_OFFSET[offset]) for offset in range(-11, 12)]
+        + [(Point(offset * 15 + 7.5, 20), GMT_TIMEZONE_BY_OFFSET[offset + 1]) for offset in range(-11, 12)]
         + [
             # If the longitude is out of bounds all bets are off! We rely on the validation
             # in the API.
