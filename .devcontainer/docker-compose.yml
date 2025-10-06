@@ -22,5 +22,7 @@ services:
     #   - seccomp:unconfined
 
     # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
+    # command: sleep infinity
  
+    # Override workdir so that dev server runs on `/workspaces`
+    working_dir: /workspaces/timezone-service

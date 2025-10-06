@@ -11,6 +11,26 @@ Alternatively, you can use `docker` directly:
 $ docker build -t timezone-service .
 ```
 
-## Run
+## Development
 
-Use `make run-production` to start a production server or `make run-dev` to start a development server in an already running `docker compose` environment.
+The following `make` targets are provided:
+
+- `bash`: Open a shell on a running containe.
+- `test`: Continuously run tests on file changes.
+- `lint`: Run linting and type checking.
+
+Checkout the `Makefile` for other targets.
+
+## Server
+
+### Production
+Use `make run-production` to start a production server.
+
+
+### Development
+When **not** using VSCode's devcontainers run `docker compose up` to start a dev server on port `8080`.
+
+For using devcontainers you should include `.devcontainer/docker-compose.yml` by setting up a `.env` file:
+```.env
+DOCKER_COMPOSE="docker-compose.yml:.devcontainer/docker-compose.yml"
+```

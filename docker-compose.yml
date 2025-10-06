@@ -3,5 +3,11 @@ services:
     build:
       context: .
     image: timezone-service
+    # You want to override this in your devcontainer's `docker-compose.yml`
+    # to make use of other mounts.
+    working_dir: /code
+    command: fastapi dev --host 0.0.0.0 --port 8080 src/timezone_service
+    volumes:
+      - .:/code:cached
     ports:
       - 8080:8080
